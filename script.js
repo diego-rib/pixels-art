@@ -22,19 +22,28 @@ for (let index = 0; index < 4; index += 1) {
 }
 
 const pixelBoard = document.querySelector('#pixel-board');
-let lines = 5;
-let columns = 5;
-for (let lineIndex = 0; lineIndex < lines; lineIndex += 1) {
-  const newLine = document.createElement('div');
-  pixelBoard.appendChild(newLine);
-  for (let columnIndex = 0; columnIndex < columns; columnIndex += 1) {
-    const newPixel = document.createElement('div');
-    newPixel.className = 'pixel';
-    newLine.appendChild(newPixel);
+const boardSize = document.querySelector('#board-size');
+
+function removeCurrentBoard() {
+  while (pixelBoard.firstChild) {
+    pixelBoard.firstChild.remove();
   }
 }
 
-pixelBoard.style.maxWidth = `${(columns * 40) + (columns * 2)}px`;
+function createBoard(lines, columns) {
+  removeCurrentBoard();
+  for (let lineIndex = 0; lineIndex < lines; lineIndex += 1) {
+    const newLine = document.createElement('div');
+    pixelBoard.appendChild(newLine);
+    for (let columnIndex = 0; columnIndex < columns; columnIndex += 1) {
+      const newPixel = document.createElement('div');
+      newPixel.className = 'pixel';
+      newLine.appendChild(newPixel);
+    }
+  }
+  boardSize.value = '';
+  pixelBoard.style.maxWidth = `${(columns * 40) + (columns * 2)}px`;
+}
 
 function selectColor(event) {
   const selectedColor = document.querySelector('.selected');
@@ -54,6 +63,8 @@ pixelBoard.addEventListener('click', paintPixel);
 
 const resetButton = document.querySelector('#clear-board');
 function resetBoard() {
+  const lines = pixelBoard.childNodes.length;
+  const columns = pixelBoard.childNodes.length;
   for (let lineIndex = 0; lineIndex < lines; lineIndex += 1) {
     const currentLine = pixelBoard.childNodes[lineIndex];
     for (let columnIndex = 0; columnIndex < columns; columnIndex += 1) {
@@ -65,31 +76,6 @@ function resetBoard() {
 resetButton.addEventListener('click', resetBoard);
 
 const generateBoardBtn = document.querySelector('#generate-board');
-
-const boardSize = document.querySelector('#board-size');
-
-function removeCurrentBoard() {
-  while (pixelBoard.firstChild) {
-    pixelBoard.firstChild.remove();
-  }
-}
-
-function createBoard(newLines, newColumns) {
-  removeCurrentBoard();
-  for (let lineIndex = 0; lineIndex < newLines; lineIndex += 1) {
-    const newLine = document.createElement('div');
-    pixelBoard.appendChild(newLine);
-    for (let columnIndex = 0; columnIndex < newColumns; columnIndex += 1) {
-      const newPixel = document.createElement('div');
-      newPixel.className = 'pixel';
-      newLine.appendChild(newPixel);
-    }
-  }
-  boardSize.value = '';
-  lines = newLines;
-  columns = newColumns;
-  pixelBoard.style.maxWidth = `${(columns * 40) + (columns * 2)}px`;
-}
 
 function generateBoard() {
   const input = boardSize.value;
@@ -105,3 +91,5 @@ function generateBoard() {
 }
 
 generateBoardBtn.addEventListener('click', generateBoard);
+
+createBoard(5, 5);
